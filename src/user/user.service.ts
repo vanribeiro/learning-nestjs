@@ -18,7 +18,7 @@ export class UserService {
     return await this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findUser(id: number): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new UserNotFoundException();
@@ -26,8 +26,23 @@ export class UserService {
     return user;
   }
 
-  async remove(id: number): Promise<User | null | string> {
-    const userToDelete = await this.findOne(id);
+  async updateUser(
+    id: number,
+    { birthday, email, name }: User,
+  ): Promise<User | null | string> {
+    const userToUpdate = await this.findUser(id);
+    if (userToUpdate) {
+      if (name) userToUpdate.name = name;
+      if (birthday) userToUpdate.birthday = birthday;
+      if (email) userToUpdate.email = email;
+      await this.usersRepository.save(userToUpdate);
+      return `User Id ${id} updated.`;
+    }
+    return userToUpdate;
+  }
+
+  async removeUser(id: number): Promise<User | null | string> {
+    const userToDelete = await this.findUser(id);
     if (userToDelete) {
       await this.usersRepository.delete(userToDelete);
       return `User Id ${id} deleted`;
