@@ -13,16 +13,17 @@ export class UserController {
 
   @Get("users")
   async findAll(): Promise<Array<User>> {
-    return (await this.userService.findAll()) || [];
+    return await this.userService.findAll();
   }
 
   @Get("users/:id")
   async findUser(@Param("id") id: string): Promise<User | null> {
-    return await this.userService.findOne(Number(id));
+    const user = await this.userService.findOne(Number(id));
+    return user;
   }
 
   @Delete("users/:id")
-  async remove(id: number): Promise<void> {
-    await this.userService.remove(id);
+  async removeUser(@Param("id") id: string): Promise<User | null | string> {
+    return await this.userService.remove(Number(id));
   }
 }
