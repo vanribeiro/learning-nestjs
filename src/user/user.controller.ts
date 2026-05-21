@@ -9,13 +9,14 @@ import {
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./user.entity";
+import { CreateUserDto, UpdateUserDto } from "./user.dto";
 
 @Controller("api")
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post("users")
-  async addUser(@Body() userData: User): Promise<User> {
+  async addUser(@Body() userData: CreateUserDto): Promise<User> {
     return this.userService.addUser(userData);
   }
 
@@ -32,7 +33,7 @@ export class UserController {
   @Put("users/:id")
   async updateOne(
     @Param("id") id: string,
-    @Body() body: User,
+    @Body() body: UpdateUserDto,
   ): Promise<User | null | string> {
     return await this.userService.updateUser(Number(id), body);
   }
